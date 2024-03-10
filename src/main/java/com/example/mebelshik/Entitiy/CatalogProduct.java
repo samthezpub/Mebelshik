@@ -10,6 +10,9 @@ public class CatalogProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    private Category category;
+
     @Column(name = "name")
     private String name;
 
