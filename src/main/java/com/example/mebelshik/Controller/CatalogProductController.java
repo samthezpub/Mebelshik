@@ -38,4 +38,14 @@ public class CatalogProductController {
 
         return new ResponseEntity<>(catalogProducts, HttpStatus.OK);
     }
+
+    @GetMapping("/get/{slug}")
+    public ResponseEntity<?> getCatalogProductBySlug(@PathVariable String slug){
+        try {
+            return new ResponseEntity<>(catalogProductService.findCatalogProductBySlug(slug), HttpStatus.OK);
+        } catch (CatalogProductNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+    }
 }

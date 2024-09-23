@@ -3,6 +3,8 @@ package com.example.mebelshik.Entitiy;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 public class CatalogProduct {
@@ -13,6 +15,9 @@ public class CatalogProduct {
     @ManyToOne
     private Category category;
 
+    @ManyToMany
+    private List<Category> subCategories;
+
     @Column(name = "name")
     private String name;
 
@@ -21,4 +26,21 @@ public class CatalogProduct {
 
     @Column(name = "price")
     private Float price;
+
+    @Column(name = "slug", unique = true)
+    private String slug;
+
+    @Column(name = "title")
+    private String titleSEO;
+
+    @Column(name = "keywords")
+    @ElementCollection
+    private List<String> keywords;
+
+    @Column(name = "photoURLs")
+    @ElementCollection
+    private List<String> photoURLs;
+
+    @ElementCollection
+    private List<String> minPhotoURLs;
 }

@@ -9,6 +9,7 @@ public interface CategoryService {
     void createCategory(Category category);
     Category findCategory(Long id) throws CategoryNotFoundException;
     List<Category> findAllCategories();
+    Category findCategoryBySlug(String slug) throws CategoryNotFoundException;
     void updateCategory(Category category);
     void deleteCategory(Long id);
 }

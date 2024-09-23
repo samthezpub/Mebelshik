@@ -26,6 +26,16 @@ public class CatalogProductServiceImpl implements CatalogProductService {
     }
 
     @Override
+    public CatalogProduct findCatalogProductBySlug(String slug) throws CatalogProductNotFoundException {
+        return catalogRepository.findCatalogProductBySlug(slug).orElseThrow(()->new CatalogProductNotFoundException("Продукт по slug не найден!"));
+    }
+
+    @Override
+    public List<CatalogProduct> findCatalogProductsByCategorySlug(String slug) throws CatalogProductNotFoundException {
+        return catalogRepository.findCatalogProductsByCategorySlug(slug);
+    }
+
+    @Override
     public List<CatalogProduct> findCatalogProductsByCategoryId(Long category_id) {
         return catalogRepository.findAllByCategory_Id(category_id);
     }

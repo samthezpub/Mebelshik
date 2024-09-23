@@ -15,6 +15,7 @@
     <description>Mebelshik</description>
     <properties>
         <java.version>17</java.version>
+
     </properties>
     <dependencies>
         <!-- Для умной штуки, отображающей пути) !-->

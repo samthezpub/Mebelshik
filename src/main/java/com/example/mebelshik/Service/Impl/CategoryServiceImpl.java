@@ -31,6 +31,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public Category findCategoryBySlug(String slug) throws CategoryNotFoundException {
+        return categoryRepository.findCategoryBySlug(slug).orElseThrow(()-> new CategoryNotFoundException("Категория по slug не найдена!"));
+    }
+
+    @Override
     public void updateCategory(Category category) {
         categoryRepository.save(category);
     }

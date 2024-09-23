@@ -1,5 +1,6 @@
 package com.example.mebelshik.Entitiy;
 
+import com.example.mebelshik.Enum.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,8 +17,9 @@ public class Order {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "price")
-    private Float price;
+    @ManyToOne
+    private CatalogProduct catalogProduct;
+
 
     @Column(name = "prepayment")
     private Float prepayment;
@@ -25,7 +27,8 @@ public class Order {
     @Column(name = "expenditure")
     private Float expenditure;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     private Date dateOfOrderAcceptance;
     private Date dateTheOrderIsReady;

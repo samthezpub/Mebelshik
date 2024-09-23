@@ -1,6 +1,7 @@
 package com.example.mebelshik.Service.Impl;
 
 import com.example.mebelshik.Entitiy.Order;
+import com.example.mebelshik.Enum.OrderStatus;
 import com.example.mebelshik.Exception.OrderNotFoundException;
 import com.example.mebelshik.Repository.OrderRepository;
 import com.example.mebelshik.Service.OrderService;
@@ -26,6 +27,18 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void updateOrder(Order order) {
         orderRepository.save(order);
+    }
+
+    @Override
+    public void updateOrderStatus(Long orderId, OrderStatus status) {
+        try {
+            Order order = findOrder(orderId);
+            order.setStatus(status);
+
+            orderRepository.save(order);
+        } catch (OrderNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
