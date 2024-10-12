@@ -1,6 +1,7 @@
 package com.example.mebelshik.Controller;
 
 import com.example.mebelshik.Entitiy.Category;
+import com.example.mebelshik.Entitiy.Filter;
 import com.example.mebelshik.Exception.CatalogProductNotFoundException;
 import com.example.mebelshik.Exception.CategoryNotFoundException;
 import com.example.mebelshik.Repository.CategoryRepository;
@@ -57,5 +58,22 @@ public class CategoryController {
         } catch (CatalogProductNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/getFilters/{categorySlug}")
+    public ResponseEntity<List<Filter>> getFiltersByCategorySlug(@PathVariable String categorySlug) {
+        Category category = null;
+        try {
+            category = categoryService.findCategoryBySlug(categorySlug);
+            if (category == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok(category.getFilters());
+        } catch (CategoryNotFoundException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+
     }
 }
