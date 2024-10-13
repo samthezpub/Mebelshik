@@ -21,7 +21,7 @@ public class CatalogProductController {
 
     // TODO create
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/getById/{id}")
     public ResponseEntity<?> getCatalogProduct(@PathVariable Long id){
         try {
             CatalogProduct catalogProduct = catalogProductService.findCatalogProduct(id);
