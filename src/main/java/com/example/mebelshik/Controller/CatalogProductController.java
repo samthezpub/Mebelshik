@@ -3,13 +3,11 @@ package com.example.mebelshik.Controller;
 import com.example.mebelshik.Entitiy.CatalogProduct;
 import com.example.mebelshik.Exception.CatalogProductNotFoundException;
 import com.example.mebelshik.Service.Impl.CatalogProductServiceImpl;
+import com.example.mebelshik.Service.Impl.ProductFilterServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,6 +16,7 @@ import java.util.List;
 @RestController
 public class CatalogProductController {
     private final CatalogProductServiceImpl catalogProductService;
+    private final ProductFilterServiceImpl productFilterService;
 
     // TODO create
 
@@ -47,5 +46,24 @@ public class CatalogProductController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
 
+    }
+
+    @GetMapping("/get/filter")
+    public ResponseEntity<List<CatalogProduct>> getProductsByFilters(
+            @RequestParam List<Long> filterIds,
+            @RequestParam List<String> values) {
+
+        if (filterIds.size() != values.size()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Long filterCount = (long) filterIds.size();
+        List<CatalogProduct> products = catalogProductService.findCatalogProductsByFilters(filterIds, values, filterCount);
+
+        if (products.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 }

@@ -3,6 +3,7 @@ package com.example.mebelshik.Service.Impl;
 import com.example.mebelshik.Entitiy.CatalogProduct;
 import com.example.mebelshik.Exception.CatalogProductNotFoundException;
 import com.example.mebelshik.Repository.CatalogRepository;
+import com.example.mebelshik.Repository.ProductFilterRepository;
 import com.example.mebelshik.Service.CatalogProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.List;
 public class CatalogProductServiceImpl implements CatalogProductService {
 
     private final CatalogRepository catalogRepository;
+    private final ProductFilterRepository productFilterRepository;
 
     @Override
     public void createCatalogProduct(CatalogProduct catalogProduct) {
@@ -38,6 +40,10 @@ public class CatalogProductServiceImpl implements CatalogProductService {
     @Override
     public List<CatalogProduct> findCatalogProductsByCategoryId(Long category_id) {
         return catalogRepository.findAllByCategory_Id(category_id);
+    }
+
+    public List<CatalogProduct> findCatalogProductsByFilters(List<Long> filterIds, List<String> values, Long filterCount) {
+        return productFilterRepository.findByFilters(filterIds, values, filterCount);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.mebelshik.Entitiy;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -43,4 +44,8 @@ public class CatalogProduct {
 
     @ElementCollection
     private List<String> minPhotoURLs;
+
+    // Связь с фильтрами и их значениями
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductFilter> productFilters;
 }
