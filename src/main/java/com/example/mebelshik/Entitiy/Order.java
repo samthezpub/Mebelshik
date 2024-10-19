@@ -14,25 +14,11 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
-
-    @ManyToOne
-    private CatalogProduct catalogProduct;
-
-
-    @Column(name = "prepayment")
-    private Float prepayment;
-
-    @Column(name = "expenditure")
-    private Float expenditure;
+    @Column(name = "price")
+    private Float price;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
     private Date dateOfOrderAcceptance;
-    private Date dateTheOrderIsReady;
-
-    private Float remains;
-
 }
