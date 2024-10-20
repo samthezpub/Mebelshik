@@ -38,6 +38,9 @@ public class CatalogProduct {
     @ElementCollection
     private List<String> keywords;
 
+    @Column(name = "photosCount")
+    private Short photosCount;
+
     @Column(name = "photoURLs")
     @ElementCollection
     private List<String> photoURLs;
