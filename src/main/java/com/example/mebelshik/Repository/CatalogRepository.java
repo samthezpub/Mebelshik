@@ -13,4 +13,5 @@ public interface CatalogRepository extends JpaRepository<CatalogProduct, Long> {
 
     List<CatalogProduct> findCatalogProductsByCategorySlug(String slug);
     Optional<CatalogProduct> findCatalogProductBySlug(String slug);
+    List<CatalogProduct> findByNameContainingIgnoreCase(String name);
 }

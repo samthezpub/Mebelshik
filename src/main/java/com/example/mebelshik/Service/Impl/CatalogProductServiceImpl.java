@@ -42,6 +42,11 @@ public class CatalogProductServiceImpl implements CatalogProductService {
         return catalogRepository.findAllByCategory_Id(category_id);
     }
 
+    @Override
+    public List<CatalogProduct> searchByName(String name) {
+        return catalogRepository.findByNameContainingIgnoreCase(name);
+    }
+
     public List<CatalogProduct> findCatalogProductsByFilters(List<Long> filterIds, List<String> values, Long filterCount) {
         return productFilterRepository.findByFilters(filterIds, values, filterCount);
     }

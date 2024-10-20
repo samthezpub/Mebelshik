@@ -66,4 +66,10 @@ public class CatalogProductController {
 
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<CatalogProduct>> searchProducts(@RequestParam String query) {
+        List<CatalogProduct> products = catalogProductService.searchByName(query);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
 }

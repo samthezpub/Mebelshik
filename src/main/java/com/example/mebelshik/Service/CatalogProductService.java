@@ -11,6 +11,7 @@ public interface CatalogProductService {
     CatalogProduct findCatalogProductBySlug(String slug) throws CatalogProductNotFoundException;
     List<CatalogProduct> findCatalogProductsByCategorySlug(String slug) throws CatalogProductNotFoundException;
     List<CatalogProduct> findCatalogProductsByCategoryId(Long category_id);
+    List<CatalogProduct> searchByName(String name);
     void updateCatalogProduct(CatalogProduct catalogProduct);
     void deleteCatalogProduct(Long id);
 }
