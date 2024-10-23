@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/orders")
@@ -18,7 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
     private final OrderServiceImpl orderService;
 
-    // TODO create
+    @PostMapping("/create")
+    public ResponseEntity<?> createOrder(@RequestBody Order order) {
+        orderService.createOrder(order);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAllOrders() {
+       return new ResponseEntity<>(orderService.findAllOrders(), HttpStatus.OK);
+    }
 
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getOrder(@PathVariable Long id){
@@ -29,5 +35,17 @@ public class OrderController {
         } catch (OrderNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<?> updateOrder(@RequestBody Order order) {
+        orderService.updateOrder(order);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<?> deleteOrder(@PathVariable Long id){
+        orderService.deleteOrder(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -8,6 +8,8 @@ import com.example.mebelshik.Service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -22,6 +24,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order findOrder(Long id) throws OrderNotFoundException {
         return orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Заказ не найден!"));
+    }
+
+    @Override
+    public List<Order> findAllOrders() {
+        return orderRepository.findAll();
     }
 
     @Override
