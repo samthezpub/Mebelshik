@@ -11,4 +11,6 @@ public interface ProductFilterService {
 
     // Поиск всех продуктов с конкретным значением фильтра
     List<ProductFilter> findByFilter_IdAndValue(Long filterId, String value);
+
+
 }
