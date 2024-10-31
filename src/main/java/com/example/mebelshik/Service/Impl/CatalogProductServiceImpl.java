@@ -8,7 +8,11 @@ import com.example.mebelshik.Service.CatalogProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.text.Normalizer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
 @Service
@@ -59,5 +63,48 @@ public class CatalogProductServiceImpl implements CatalogProductService {
     @Override
     public void deleteCatalogProduct(Long id) {
         catalogRepository.deleteById(id);
+    }
+
+    // Метод транслитерации
+    private String transliterate(String text) {
+        Map<Character, String> translitMap = new HashMap<>();
+        translitMap.put('а', "a"); translitMap.put('б', "b"); translitMap.put('в', "v");
+        translitMap.put('г', "g"); translitMap.put('д', "d"); translitMap.put('е', "e");
+        translitMap.put('ё', "e"); translitMap.put('ж', "zh"); translitMap.put('з', "z");
+        translitMap.put('и', "i"); translitMap.put('й', "y"); translitMap.put('к', "k");
+        translitMap.put('л', "l"); translitMap.put('м', "m"); translitMap.put('н', "n");
+        translitMap.put('о', "o"); translitMap.put('п', "p"); translitMap.put('р', "r");
+        translitMap.put('с', "s"); translitMap.put('т', "t"); translitMap.put('у', "u");
+        translitMap.put('ф', "f"); translitMap.put('х', "kh"); translitMap.put('ц', "ts");
+        translitMap.put('ч', "ch"); translitMap.put('ш', "sh"); translitMap.put('щ', "shch");
+        translitMap.put('ъ', ""); translitMap.put('ы', "y"); translitMap.put('ь', "");
+        translitMap.put('э', "e"); translitMap.put('ю', "yu"); translitMap.put('я', "ya");
+
+        StringBuilder transliterated = new StringBuilder();
+        for (char c : text.toLowerCase().toCharArray()) {
+            transliterated.append(translitMap.getOrDefault(c, String.valueOf(c)));
+        }
+        return transliterated.toString();
+    }
+
+    // Метод для генерации slug
+    public String generateSlug(String name) {
+        // Транслитерация имени
+        String transliterated = transliterate(name);
+
+        // Преобразование в slug
+        String slug = transliterated
+                .toLowerCase()
+                .replaceAll("\\s+", "-")        // Заменяем пробелы на дефисы
+                .replaceAll("[^a-z0-9\\-]", "") // Удаляем нежелательные символы
+                .replaceAll("-+", "-");         // Убираем повторяющиеся дефисы
+
+        // Проверка на уникальность slug
+        String uniqueSlug = slug;
+        int count = 1;
+        while (catalogRepository.existsBySlug(uniqueSlug)) {
+            uniqueSlug = slug + "-" + count++;
+        }
+        return uniqueSlug;
     }
 }

@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface CatalogRepository extends JpaRepository<CatalogProduct, Long> {
     List<CatalogProduct> findAllByCategory_Id(Long category_id);
 
+
+    boolean existsBySlug(String slug);
     List<CatalogProduct> findCatalogProductsByCategorySlug(String slug);
     Optional<CatalogProduct> findCatalogProductBySlug(String slug);
     List<CatalogProduct> findByNameContainingIgnoreCase(String name);

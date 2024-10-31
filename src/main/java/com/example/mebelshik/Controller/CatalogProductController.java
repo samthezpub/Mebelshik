@@ -41,6 +41,9 @@ public class CatalogProductController {
         catalogProduct.setDescription(description);
         catalogProduct.setPrice(price);
         catalogProduct.setTitleSEO(title);
+
+        catalogProduct.setSlug(catalogProductService.generateSlug(name));
+
         try {
             catalogProduct.setCategory(categoryService.findCategory(categoryId));
         } catch (CategoryNotFoundException e) {
