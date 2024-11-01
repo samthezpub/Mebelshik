@@ -1,14 +1,18 @@
 package com.example.mebelshik.Service.Impl;
 
 import com.example.mebelshik.Entitiy.CatalogProduct;
+import com.example.mebelshik.Entitiy.Category;
 import com.example.mebelshik.Exception.CatalogProductNotFoundException;
+import com.example.mebelshik.Exception.CategoryNotFoundException;
 import com.example.mebelshik.Repository.CatalogRepository;
+import com.example.mebelshik.Repository.CategoryRepository;
 import com.example.mebelshik.Repository.ProductFilterRepository;
 import com.example.mebelshik.Service.CatalogProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +23,7 @@ import java.util.regex.Pattern;
 public class CatalogProductServiceImpl implements CatalogProductService {
 
     private final CatalogRepository catalogRepository;
+    private final CategoryRepository categoryRepository;
     private final ProductFilterRepository productFilterRepository;
 
     @Override
@@ -37,8 +42,22 @@ public class CatalogProductServiceImpl implements CatalogProductService {
     }
 
     @Override
-    public List<CatalogProduct> findCatalogProductsByCategorySlug(String slug) throws CatalogProductNotFoundException {
+    public List<CatalogProduct> findCatalogProductsByCategorySlug(String slug) throws CatalogProductNotFoundException, CategoryNotFoundException {
+        Category category = categoryRepository.findCategoryBySlug(slug).orElseThrow(() -> new CategoryNotFoundException("Категория не найдена!"));
+
+        if (category.getIsMainCategory()){
+            List<CatalogProduct> resultProducts = new ArrayList<>();
+            resultProducts.addAll(catalogRepository.findCatalogProductsByCategorySlug(slug));
+            for(Category subcategory: category.getSubCategories()){
+                resultProducts.addAll(findCatalogProductsByCategorySlug(subcategory.getSlug()));
+            }
+
+            return resultProducts;
+        }
+
         return catalogRepository.findCatalogProductsByCategorySlug(slug);
+
+
     }
 
     @Override

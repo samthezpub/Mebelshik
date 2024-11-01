@@ -24,6 +24,7 @@ public class Category {
     @JoinColumn(name = "category_id")
     private List<Filter> filters = new ArrayList<>();
 
+    private Boolean isMainCategory = false;
 
     @ManyToMany
     private List<Category> subCategories;

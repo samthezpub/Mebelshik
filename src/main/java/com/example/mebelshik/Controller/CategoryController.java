@@ -57,6 +57,8 @@ public class CategoryController {
             return new ResponseEntity<>(catalogProductService.findCatalogProductsByCategorySlug(slug), HttpStatus.OK);
         } catch (CatalogProductNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (CategoryNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 

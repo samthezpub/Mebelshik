@@ -6,6 +6,7 @@ import com.example.mebelshik.Exception.CatalogProductNotFoundException;
 import com.example.mebelshik.Exception.CategoryNotFoundException;
 import com.example.mebelshik.Service.Impl.CatalogProductServiceImpl;
 import com.example.mebelshik.Service.Impl.CategoryServiceImpl;
+import com.example.mebelshik.Service.Impl.FileUploadServiceImpl;
 import com.example.mebelshik.Service.Impl.ProductFilterServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ public class CatalogProductController {
     private final CatalogProductServiceImpl catalogProductService;
     private final ProductFilterServiceImpl productFilterService;
     private final CategoryServiceImpl categoryService;
+    private final FileUploadServiceImpl fileUploadService;
 
     @PostMapping("/create")
     public ResponseEntity<CatalogProduct> createCatalogProduct(
@@ -42,7 +45,26 @@ public class CatalogProductController {
         catalogProduct.setPrice(price);
         catalogProduct.setTitleSEO(title);
 
-        catalogProduct.setSlug(catalogProductService.generateSlug(name));
+        String slug = catalogProductService.generateSlug(name);
+
+        catalogProduct.setSlug(slug);
+
+
+        int photosCount = 0;
+
+        for (Integer i = 0; i < files.size(); i++) {
+            MultipartFile file = files.get(i);
+
+            try {
+                fileUploadService.saveFileForProductByProductSlugAndIterator(file, slug, photosCount+1);
+
+                photosCount++;
+            } catch (IOException e) {
+                continue;
+            }
+        }
+
+        catalogProduct.setPhotosCount((short) photosCount);
 
         try {
             catalogProduct.setCategory(categoryService.findCategory(categoryId));
