@@ -103,7 +103,7 @@ public class CatalogProductServiceImpl implements CatalogProductService {
         stringBuilder.append("сколько стоит " + name + " в мариуполе днр");
 
 
-        return name;
+        return stringBuilder.toString();
     }
 
     // Метод транслитерации
