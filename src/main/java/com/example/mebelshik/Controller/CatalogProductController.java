@@ -47,8 +47,8 @@ public class CatalogProductController {
         catalogProduct.setName(name);
         catalogProduct.setDescription(description);
         catalogProduct.setPrice(price);
-        catalogProduct.setTitleSEO(name + " купить в Мариуполе за " + price +  "рублей в интернет магазине ArtMebel");
-        catalogProduct.setDescriptionSEO(name + " в городе Мариуполь за " + price +"рублей. В интенет-магазине ArtMebel. Бесплатная доставка по Мариуполю.");
+        catalogProduct.setTitleSEO(name + " купить в Мариуполе за " + Math.round(price) +  " рублей в интернет магазине ArtMebel");
+        catalogProduct.setDescriptionSEO(name + " в городе Мариуполь за " + Math.round(price) +" рублей. В интенет-магазине ArtMebel. Бесплатная доставка по Мариуполю.");
 
         catalogProduct.setKeywords(catalogProductService.generateKeywords(name));
 
@@ -112,8 +112,8 @@ public class CatalogProductController {
             product.setName(request.getName());
             product.setDescription(request.getDescription());
             product.setPrice(request.getPrice());
-            product.setTitleSEO(request.getName() + " купить в Мариуполе за " + Integer.parseInt(request.getPrice().toString()) +  " рублей в интернет магазине ArtMebel");
-            product.setDescriptionSEO(request.getName() + " в городе Мариуполь за " + Integer.parseInt(request.getPrice().toString()) +" рублей. В интенет-магазине ArtMebel. Бесплатная доставка по Мариуполю.");
+            product.setTitleSEO(request.getName() + " купить в Мариуполе за " + Math.round(request.getPrice()) +  " рублей в интернет магазине ArtMebel");
+            product.setDescriptionSEO(request.getName() + " в городе Мариуполь за " + Math.round(request.getPrice()) +" рублей. В интенет-магазине ArtMebel. Бесплатная доставка по Мариуполю.");
 
             product.setKeywords(catalogProductService.generateKeywords(request.getName()));
 
