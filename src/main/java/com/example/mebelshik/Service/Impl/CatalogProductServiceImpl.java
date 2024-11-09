@@ -92,13 +92,14 @@ public class CatalogProductServiceImpl implements CatalogProductService {
     public String generateKeywords(String name) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("купить " + name + " б у мариуполь, ");
-        stringBuilder.append("купить " + name + "в мариуполе, ");
-        stringBuilder.append("купить " + name + "в мариуполе бу, ");
-        stringBuilder.append("купить " + name + "мариуполь, ");
-        stringBuilder.append("купить " + name + "мариуполь днр, ");
-        stringBuilder.append("купить " + name + "на заказ в мариуполе, ");
+        stringBuilder.append("купить " + name + " в мариуполе, ");
+        stringBuilder.append("купить " + name + " в мариуполе бу, ");
+        stringBuilder.append("купить " + name + " мариуполь, ");
+        stringBuilder.append("купить " + name + " мариуполь днр, ");
+        stringBuilder.append("купить " + name + " на заказ в мариуполе, ");
         stringBuilder.append("озон " + name + " купить, ");
         stringBuilder.append(name + " цена, ");
+        stringBuilder.append(name);
         stringBuilder.append("сколько стоит " + name + " в мариуполе, ");
         stringBuilder.append("сколько стоит " + name + " в мариуполе днр");
 
