@@ -8,11 +8,16 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductFilterRepository extends JpaRepository<ProductFilter, Long> {
     // Поиск всех фильтров для продукта
     List<ProductFilter> findByProduct(CatalogProduct product);
+
+    CatalogProduct findByProductId(Long productId);
+
+    Optional<ProductFilter> findByProductIdAndFilterId(Long productId, Long filterId);
 
     // Поиск всех продуктов с конкретным значением фильтра
     @Query("SELECT p FROM CatalogProduct p JOIN p.productFilters pf WHERE pf.filter.id = :filterId AND :value MEMBER OF pf.filter.values")

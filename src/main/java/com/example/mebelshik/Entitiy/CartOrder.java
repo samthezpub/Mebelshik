@@ -3,7 +3,10 @@ package com.example.mebelshik.Entitiy;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -21,4 +24,6 @@ public class CartOrder {
     private String email;
     private String address;
 
+    @ManyToMany
+    private List<CatalogProduct> products;
 }

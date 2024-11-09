@@ -1,5 +1,6 @@
 package com.example.mebelshik.Entitiy;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,12 +21,17 @@ public class Category {
     @Column(name = "slug", unique = true)
     private String slug;
 
+    private String titleSEO;
+    private String descriptionSEO;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
+    @JsonManagedReference
     private List<Filter> filters = new ArrayList<>();
 
     private Boolean isMainCategory = false;
 
     @ManyToMany
+    @JsonManagedReference
     private List<Category> subCategories;
 }

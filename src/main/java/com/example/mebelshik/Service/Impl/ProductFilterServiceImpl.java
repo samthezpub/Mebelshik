@@ -3,6 +3,7 @@ package com.example.mebelshik.Service.Impl;
 import com.example.mebelshik.Entitiy.CatalogProduct;
 import com.example.mebelshik.Entitiy.Filter;
 import com.example.mebelshik.Entitiy.ProductFilter;
+import com.example.mebelshik.Exception.FilterNotFoundException;
 import com.example.mebelshik.Repository.CatalogRepository;
 import com.example.mebelshik.Repository.FilterRepository;
 import com.example.mebelshik.Repository.ProductFilterRepository;
@@ -38,9 +39,17 @@ public class ProductFilterServiceImpl {
         return productFilterRepository.save(productFilter);
     }
 
+    public ProductFilter updateProductFilter(ProductFilter productFilter) {
+        return productFilterRepository.save(productFilter);
+    }
+
     // Найти все продукты с конкретным значением фильтра
     public List<CatalogProduct> getProductsByFilter(Long filterId, String value) {
         return productFilterRepository.findByFilter_IdAndValue(filterId, value);
+    }
+
+    public ProductFilter getFilterByProductIdAndFilterId(Long productId, Long filterId) throws FilterNotFoundException {
+        return productFilterRepository.findByProductIdAndFilterId(productId, filterId).orElseThrow(()-> new FilterNotFoundException("Фильтер не найден!"));
     }
 
     // Сохранить фильтр для продукта

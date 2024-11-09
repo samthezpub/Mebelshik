@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  spring-app:
+    image: eclipse-temurin:17.0.13_11-jre-ubi9-minimal
+    container_name: spring_app_container
+    ports:
+      - "8080:8080"  # Порт, на котором будет доступно ваше приложение
+    volumes:
+      - ./Mebelshik-0.0.1-SNAPSHOT.jar:/app/app.jar  # Укажите путь к вашему JAR-файлу
+    command: ["java", "-jar", "/app/app.jar"]
+    restart: unless-stopped

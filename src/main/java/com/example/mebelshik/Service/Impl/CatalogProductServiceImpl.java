@@ -11,12 +11,10 @@ import com.example.mebelshik.Service.CatalogProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
 @Service
@@ -30,6 +28,12 @@ public class CatalogProductServiceImpl implements CatalogProductService {
     public void createCatalogProduct(CatalogProduct catalogProduct) {
         catalogRepository.save(catalogProduct);
     }
+
+    @Override
+    public List<CatalogProduct> findAll() {
+        return catalogRepository.findAll();
+    }
+
 
     @Override
     public CatalogProduct findCatalogProduct(Long id) throws CatalogProductNotFoundException {
@@ -82,6 +86,24 @@ public class CatalogProductServiceImpl implements CatalogProductService {
     @Override
     public void deleteCatalogProduct(Long id) {
         catalogRepository.deleteById(id);
+    }
+
+    @Override
+    public String generateKeywords(String name) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("купить " + name + " б у мариуполь, ");
+        stringBuilder.append("купить " + name + "в мариуполе, ");
+        stringBuilder.append("купить " + name + "в мариуполе бу, ");
+        stringBuilder.append("купить " + name + "мариуполь, ");
+        stringBuilder.append("купить " + name + "мариуполь днр, ");
+        stringBuilder.append("купить " + name + "на заказ в мариуполе, ");
+        stringBuilder.append("озон " + name + " купить, ");
+        stringBuilder.append(name + " цена, ");
+        stringBuilder.append("сколько стоит " + name + " в мариуполе, ");
+        stringBuilder.append("сколько стоит " + name + " в мариуполе днр");
+
+
+        return name;
     }
 
     // Метод транслитерации
