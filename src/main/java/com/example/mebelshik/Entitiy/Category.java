@@ -21,9 +21,6 @@ public class Category {
     @Column(name = "slug", unique = true)
     private String slug;
 
-    private String titleSEO;
-    private String descriptionSEO;
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     @JsonManagedReference
