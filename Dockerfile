@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Копируем JAR файл в контейнер
-COPY target/app.jar /app/app.jar
+COPY target/Mebelshik-0.0.1-SNAPSHOT.jar /app/app.jar
 
 # Открываем порт 8080 для приложения
 EXPOSE 8080
