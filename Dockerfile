@@ -1,45 +1,28 @@
-# Stage 1: Build the application
-FROM node:18-alpine AS builder
+# Используем официальный образ OpenJDK как базовый
+FROM openjdk:17-jdk-slim
 
-# Устанавливаем рабочую директорию
+# Устанавливаем рабочую директорию в контейнере
 WORKDIR /app
 
-# Копируем package.json и package-lock.json из src в корневую директорию контейнера
-COPY ./package.json ./package-lock.json ./
+# Копируем JAR файл в контейнер
+COPY target/app.jar /app/app.jar
 
-RUN ls -la /app
-# Устанавливаем зависимости
-RUN npm install
+# Открываем порт 8080 для приложения
+EXPOSE 8080
 
-# Копируем весь код из директории src в контейнер
-COPY src ./
-COPY public ./
+# Запускаем Spring Boot приложение
+ENTRYPOINT ["java", "-jar", "app.jar"]
+# Используем официальный образ OpenJDK как базовый
+FROM openjdk:17-jdk-slim
 
-# Сборка приложения
-RUN npm run build
-
-# Stage 2: Production image
-FROM node:18-alpine AS runner
-
+# Устанавливаем рабочую директорию в контейнере
 WORKDIR /app
 
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV HOSTNAME="0.0.0.0"
+# Копируем JAR файл в контейнер
+COPY target/Mebelshik-0.0.1-SNAPSHOT.jar /app/app.jar
 
-# Создаем группу и пользователя
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Открываем порт 8080 для приложения
+EXPOSE 8080
 
-# Копируем необходимые файлы из builder stage
-COPY --from=builder /app/ ./
-
-# Устанавливаем права на .next директорию
-RUN chown -R nextjs:nodejs .next
-
-USER nextjs
-
-EXPOSE 3000
-
-# Запуск приложения через встроенный сервер Next.js
-CMD ["npm", "run", "start"]
+# Запускаем Spring Boot приложение
+ENTRYPOINT ["java", "-jar", "app.jar"]
