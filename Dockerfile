@@ -1,25 +1,27 @@
-# Используем официальный образ OpenJDK как базовый
-FROM openjdk:17-jdk-slim
+# Используем официальный образ Maven с OpenJDK для сборки
+FROM maven:3.8.6-openjdk-17-slim AS build
 
-# Устанавливаем рабочую директорию в контейнере
+# Устанавливаем рабочую директорию для сборки
 WORKDIR /app
 
-# Копируем JAR файл в контейнер
-COPY target/Mebelshik-0.0.1-SNAPSHOT.jar /app/app.jar
+# Копируем файл pom.xml и загружаем зависимости
+COPY pom.xml /app/
+RUN mvn dependency:go-offline
 
-# Открываем порт 8080 для приложения
-EXPOSE 8080
+# Копируем все исходники проекта в контейнер
+COPY src /app/src
 
-# Запускаем Spring Boot приложение
-ENTRYPOINT ["java", "-jar", "app.jar"]
-# Используем официальный образ OpenJDK как базовый
+# Собираем приложение
+RUN mvn clean package -DskipTests
+
+# Теперь используем образ с JDK для запуска приложения
 FROM openjdk:17-jdk-slim
 
-# Устанавливаем рабочую директорию в контейнере
+# Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Копируем JAR файл в контейнер
-COPY target/Mebelshik-0.0.1-SNAPSHOT.jar /app/app.jar
+# Копируем скомпилированный JAR файл из предыдущего шага
+COPY --from=build /app/target/app.jar /app/app.jar
 
 # Открываем порт 8080 для приложения
 EXPOSE 8080
