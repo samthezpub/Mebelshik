@@ -8,10 +8,7 @@ import com.example.mebelshik.Exception.CatalogProductNotFoundException;
 import com.example.mebelshik.Exception.CategoryNotFoundException;
 import com.example.mebelshik.Exception.FilterNotFoundException;
 import com.example.mebelshik.Request.UpdateProductRequest;
-import com.example.mebelshik.Service.Impl.CatalogProductServiceImpl;
-import com.example.mebelshik.Service.Impl.CategoryServiceImpl;
-import com.example.mebelshik.Service.Impl.FileUploadServiceImpl;
-import com.example.mebelshik.Service.Impl.ProductFilterServiceImpl;
+import com.example.mebelshik.Service.Impl.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -31,15 +28,16 @@ public class CatalogProductController {
     private final ProductFilterServiceImpl productFilterService;
     private final CategoryServiceImpl categoryService;
     private final FileUploadServiceImpl fileUploadService;
+    private final FilterServiceImpl filterService;
 
     @PostMapping("/create")
-    public ResponseEntity<CatalogProduct> createCatalogProduct(
+    public ResponseEntity<?> createCatalogProduct(
             @RequestParam("name") String name,
             @RequestParam("description") String description,
             @RequestParam("price") Float price,
             @RequestParam("title") String title,
             @RequestParam("category") Long categoryId,
-            @RequestParam Map<Long, String> filtersIds, // для фильтров
+            @RequestParam(name = "filters", required = false) String filters, // фильтры как строка
             @RequestPart("file") List<MultipartFile> files // для списка файлов
     ) {
         // Создаем CatalogProduct и обрабатываем файлы
@@ -47,8 +45,8 @@ public class CatalogProductController {
         catalogProduct.setName(name);
         catalogProduct.setDescription(description);
         catalogProduct.setPrice(price);
-        catalogProduct.setTitleSEO(name + " купить в Мариуполе за " + Math.round(price) +  " рублей в интернет магазине ArtMebel");
-        catalogProduct.setDescriptionSEO(name + " в городе Мариуполь за " + Math.round(price) +" рублей. В интенет-магазине ArtMebel. Бесплатная доставка по Мариуполю.");
+        catalogProduct.setTitleSEO(name + " купить в Мариуполе за " + Math.round(price) + " рублей в интернет магазине ArtMebel");
+        catalogProduct.setDescriptionSEO(name + " в городе Мариуполь за " + Math.round(price) + " рублей. В интенет-магазине ArtMebel. Бесплатная доставка по Мариуполю.");
 
         catalogProduct.setKeywords(catalogProductService.generateKeywords(name));
 
@@ -81,19 +79,39 @@ public class CatalogProductController {
 
         catalogProductService.createCatalogProduct(catalogProduct);
 
-        List<ProductFilter> productFilters = new ArrayList<>();
+        Map<String, String> filtersMapped = new HashMap<>();
 
-        for (var filter : filtersIds.entrySet()) {
-            System.out.println(filter.getKey());
-            System.out.println(filter.getValue());
+        if (filters != null) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                filtersMapped = objectMapper.readValue(filters, new TypeReference<Map<String, String>>() {
+                });
+            } catch (IOException e) {
+                // Обработка исключения
+                return new ResponseEntity<>("Не указаны фильтры", HttpStatus.BAD_REQUEST);
+            }
         }
-        ;
 
-//        filtersIds.stream().forEach(filterId -> {
-//            productFilters.add(productFilterService.createProductFilter(catalogProduct.getId(), filterId, ))
-//        });
-//
-//        catalogProduct.setProductFilters(filters); // если filters — это Map или измените под ваш тип
+        List<ProductFilter> filterList = new ArrayList<>();
+
+
+        filtersMapped.forEach((key, value) -> {
+
+            Long id = Long.parseLong(value);
+            System.out.println(id);
+
+
+            ProductFilter productFilter = productFilterService.createProductFilter(catalogProduct.getId(), Long.parseLong(key), value);
+            productFilter.setValue(value);
+
+            ProductFilter filter = productFilterService.updateProductFilter(productFilter);
+            filterList.add(filter);
+
+        });
+
+        catalogProduct.setProductFilters(filterList);
+
+        catalogProductService.updateCatalogProduct(catalogProduct);
 
 
         return new ResponseEntity<>(catalogProduct, HttpStatus.OK);
@@ -112,8 +130,8 @@ public class CatalogProductController {
             product.setName(request.getName());
             product.setDescription(request.getDescription());
             product.setPrice(request.getPrice());
-            product.setTitleSEO(request.getName() + " купить в Мариуполе за " + Math.round(request.getPrice()) +  " рублей в интернет магазине ArtMebel");
-            product.setDescriptionSEO(request.getName() + " в городе Мариуполь за " + Math.round(request.getPrice()) +" рублей. В интенет-магазине ArtMebel. Бесплатная доставка по Мариуполю.");
+            product.setTitleSEO(request.getName() + " купить в Мариуполе за " + Math.round(request.getPrice()) + " рублей в интернет магазине ArtMebel");
+            product.setDescriptionSEO(request.getName() + " в городе Мариуполь за " + Math.round(request.getPrice()) + " рублей. В интенет-магазине ArtMebel. Бесплатная доставка по Мариуполю.");
 
             product.setKeywords(catalogProductService.generateKeywords(request.getName()));
 
@@ -162,7 +180,7 @@ public class CatalogProductController {
                 try {
                     Long filterId = Long.parseLong(key);
                     System.out.println(filterId);
-                    ProductFilter productFilter = productFilterService.getFilterByProductIdAndFilterId(productId,filterId);
+                    ProductFilter productFilter = productFilterService.getFilterByProductIdAndFilterId(productId, filterId);
                     productFilter.setValue(value);
 
                     ProductFilter filter = productFilterService.updateProductFilter(productFilter);
