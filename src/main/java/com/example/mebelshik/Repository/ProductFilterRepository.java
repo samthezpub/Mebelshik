@@ -17,6 +17,8 @@ public interface ProductFilterRepository extends JpaRepository<ProductFilter, Lo
 
     CatalogProduct findByProductId(Long productId);
 
+    List<ProductFilter> findByFilterTypeAndValue(String filterType, String value);
+
     Optional<ProductFilter> findByProductIdAndFilterId(Long productId, Long filterId);
 
     // Поиск всех продуктов с конкретным значением фильтра

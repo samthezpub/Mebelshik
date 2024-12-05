@@ -11,7 +11,6 @@ import java.util.List;
 
 @Data
 @Entity
-@JsonIgnoreProperties({"productFilters"})
 public class CatalogProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,7 +55,7 @@ public class CatalogProduct {
     private List<String> minPhotoURLs;
 
     // Связь с фильтрами и их значениями
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("product") // Предотвращает зацикливание
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    @JsonManagedReference
     private List<ProductFilter> productFilters;
 }

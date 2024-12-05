@@ -10,7 +10,6 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "product_filters")
-@JsonIgnoreProperties({"product"}) // Игнорируем product при сериализации
 public class ProductFilter {
 
     @Id
@@ -20,17 +19,29 @@ public class ProductFilter {
     // Связь с продуктом
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    @JsonIgnore
-    @JsonIgnoreProperties("productFilters")
+    @JsonBackReference
     private CatalogProduct product;
 
     // Связь с фильтром
     @ManyToOne
     @JoinColumn(name = "filter_id", nullable = false)
-    @JsonBackReference
     private Filter filter;
+
+
 
     // Значение выбранного фильтра
     @Column(name = "value", nullable = false)
     private String value;
+
+    // Тип фильтра для упрощения поиска
+    @Column(name = "filter_type")
+    private String filterType;
+
+    @PrePersist
+    @PreUpdate
+    private void updateFilterType() {
+        if (filter != null) {
+            this.filterType = filter.getFilterType();
+        }
+    }
 }

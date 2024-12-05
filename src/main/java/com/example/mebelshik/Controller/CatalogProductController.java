@@ -97,7 +97,7 @@ public class CatalogProductController {
 
         filtersMapped.forEach((key, value) -> {
 
-            Long id = Long.parseLong(value);
+            Long id = Long.parseLong(key);
             System.out.println(id);
 
 
